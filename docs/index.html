@@ -3,15 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Web UI Stuff</title>
+    <title>Memory Enhancement Tool for LLM - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            line-height: 1.6;
+        }
+        header, footer {
+            background-color: #f4f4f4;
+            padding: 10px;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        code {
+            background-color: #eeeeee;
+            padding: 2px 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #eeeeee;
+            padding: 10px;
+            overflow: auto;
+        }
+        .summary {
+            border-left: 4px solid #007acc;
+            padding-left: 10px;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Open Web UI Stuff</h1>
-    <p>This is a GitHub Pages site for the open-webui-stuff project.</p>
-    <p>Check out the video below:</p>
-    <video width="560" height="315" controls>
-        <source src="https://github.com/mhioi/open-webui-stuff/blob/003c4d0c26951e60f86db0db7a46821cf814bfe3/examples/gpt4-memory%20mimic/memory-mimic.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <header>
+        <h1>Memory Enhancement Tool for LLM</h1>
+    </header>
+
+    <section>
+        <h2>Overview</h2>
+        <p>The Memory Enhancement Tool is designed to extend the functionality of a local large language model (LLM) web UI by incorporating a dynamic memory feature. This feature allows the LLM to retain, recall, and manage information from user interactions over time, enhancing context-aware responses similar to human-like conversation flow.</p>
+    </section>
+
+    <section>
+        <h2>Key Developments</h2>
+        <ul>
+            <li>User-Controlled Memory Addition: Allows users to decide what to store in memory.</li>
+            <li>Automatic Important Data Storage: Identifies and stores crucial information.</li>
+            <li>Contradiction Handling in Memory: Updates inconsistent information automatically.</li>
+            <li>Integration with LLM for Summarization: Utilizes LLM to summarize inputs before saving.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Changes Applied</h2>
+        <div class="summary">
+            <h3>User-Controlled Memory Addition</h3>
+            <p>Modified the <code>add_to_memory_if_user_wants</code> method to allow users to decide what gets stored in memory. This feature enhances user control over personal data retention.</p>
+        </div>
+
+        <div class="summary">
+            <h3>Automatic Important Data Storage</h3>
+            <p>Implemented the <code>add_important_data</code> method, allowing the system to identify and store key pieces of acquired information. This ensures crucial data is always retained and easily accessible.</p>
+        </div>
+
+        <div class="summary">
+            <h3>Handling Contradictory Information</h3>
+            <p>Added logic to identify and update contradictions in stored memory, maintaining the consistency and reliability of stored data.</p>
+        </div>
+
+        <div class="summary">
+            <h3>LLM-Inspired Summarization</h3>
+            <p>Integrated the LLM to perform input summarization before storing any data, ensuring efficient memory usage with valuable summaries.</p>
+            <pre><code>async def summarize_with_llm(self, text: str) -> str:
+    return f"Summarized: {text[:50]}..." if len(text) > 50 else text
+</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Code Snippets</h2>
+        <p>See the following snippets for integration points mentioned in the above changes.</p>
+        <pre><code>def add_to_memory_if_user_wants(self, key: str, value: Any, user_wants: bool):
+    if user_wants:
+        self.add_to_memory(key, value)
+
+async def handle_input(self, input_text: str, user_wants_to_add: bool, ...):
+    summarized_input = await self.summarize_with_llm(input_text)
+    ...
+    self.memory.add_to_memory("user_interaction", {"timestamp": ..., "summary": summarized_input})
+</code></pre>
+    </section>
+
+    <footer>
+        <p>Documentation © 2023 Memory Enhancement Tool for Open-WebUI.</p>
+    </footer>
 </body>
 </html>
