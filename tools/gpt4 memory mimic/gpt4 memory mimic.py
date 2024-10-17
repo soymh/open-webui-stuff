@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 0.1.0
+version: 0.3.0
 license: MIT
 """
 
@@ -19,6 +19,23 @@ class MemoryFunctions:
         self.debug = debug
         self.memory_data = self.load_memory()
         self.tag_options = ["personal", "work", "education", "life", "person", "others"]
+
+    def update_memory_by_index(self, index: int, tag: str, memo: str, by: str):
+        if index in self.memory_data:
+            if tag not in self.tag_options:
+                tag = "others"
+
+            # Update the entry
+            self.memory_data[index]["tag"] = tag
+            self.memory_data[index]["memo"] = memo
+            self.memory_data[index]["by"] = by
+            self.memory_data[index]["last_modified"] = datetime.datetime.now().strftime(
+                "%Y-%m-%d_%H:%M:%S"
+            )
+            self.save_memory()
+            return f"Memory index {index} updated successfully."
+        else:
+            return f"Memory index {index} does not exist."
 
     def load_memory(self):
         if os.path.exists(self.memory_file):
@@ -257,6 +274,40 @@ class Tools:
             status="complete", description="Memory refresh completed.", done=True
         )
 
+    async def update_memory_entry(
+        self,
+        index: int,
+        tag: str,
+        memo: str,
+        by: str,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Update an existing memory entry based on its index.
+
+        :param index: The index of the memory entry to update.
+        :param tag: The tag for the memory entry.
+        :param memo: The memory information to update.
+        :param by: Who is making the update ('user' or 'LLM').
+        :returns: A message indicating the success or failure of the update.
+        """
+        emitter = EventEmitter(__event_emitter__)
+
+        if self.valves.DEBUG:
+            print(
+                f"Updating memory index {index} with tag: {tag}, memo: {memo}, by: {by}"
+            )
+
+        update_message = self.memory.update_memory_by_index(index, tag, memo, by)
+
+        await emitter.emit(
+            description=update_message, status="memory_update", done=True
+        )
+
+        return update_message
+
 
 # Example of usage: instantiate Tools and call handle_input, recall_memories, or clear_memories with user queries.
+
+
 
