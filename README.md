@@ -10,7 +10,7 @@ This repository was initially created to demonstrate the usage of GPT-4 memory m
 
 Check out the demo of the GPT-4 memory mimic tool below! Please note that this is still in the demo release phase and has a long way to go. Your feedback and suggestions are highly appreciated!
 
-![Demo](https://github.com/mhioi/open-webui-stuff/blob/4ea3f0a44d2c9a2af65467675e898b5cfc1fe834/examples/gpt4-memory%20mimic/gpt4-memory%20mimic.gif)
+![Demo](https://github.com/mhioi/open-webui-stuff/blob/30998c6ea5a0619b620ae727a69ff80298680070/examples/gpt4-memory%20mimic/gpt4-memory%20mimic.gif)
 
 ## Get Involved
 
