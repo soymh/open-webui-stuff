@@ -6,116 +6,142 @@
     <title>Memory Enhancement Tool for LLM - Documentation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0 auto;
-            padding: 30px;
-            max-width: 900px;
+            font-family: 'Arial', sans-serif;
             background-color: #1e1e1e;
-            color: #e0e0e0;
+            color: #c5c5c5;
+            margin: 20px;
         }
         header, footer {
             text-align: center;
             margin-bottom: 30px;
         }
-        .code {
-            background-color: #2e2e2e;
-            border-left: 4px solid #007acc;
-            padding: 10px;
-            overflow-x: auto;
-            font-family: Consolas, Menlo, Monaco, Courier, monospace;
-            margin: 20px 0;
-            color: #dcdcdc;
+        header h1 {
+            color: #4CAF50;
         }
-        h2, h3, h4 {
-            color: #66c2ff;
+        section {
+            margin-bottom: 40px;
+        }
+        h2, h3 {
+            color: #4CAF50;
         }
         p {
-            margin: 10px 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        .code {
+            display: block;
+            background-color: #2e2e2e;
+            color: #71c7ec;
+            padding: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: auto;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        div.dynamic-content {
+            transition: all 0.3s ease;
+            color: #76C7C0;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Memory Enhancement Tool for LLM</h1>
-        <p>Version 1.0.0</p>
-        <p>Author: mhioi</p>
+        <h1>Memory Enhancement Tool for LLM - Documentation</h1>
+        <p>Version 1.0.0 | Author: <a href="https://github.com/mhioi" style="color: #71c7ec;">mhioi</a></p>
     </header>
 
     <section>
-        <h2>Overview</h2>
-        <p>The Memory Enhancement Tool augments the functionality of a local large language model (LLM) web interface by integrating persistent memory operations. This tool allows the LLM to manage data dynamically through operations such as adding, deleting, updating, and switching among different memory files. Its capabilities enable the LLM to maintain context across interactions, providing a more human-like, memory-enhanced interaction approach.</p>
+        <h2>Functionality Overview</h2>
+        <p>Enable the LLM to utilize advanced memory management functionalities. Below are directives for using the available operations in the <strong>Tools</strong> class:</p>
     </section>
 
     <section>
-        <h2>Commands for LLM</h2>
+        <h2>Usage Instructions for Tools Class</h2>
 
-        <h3>Add Memory</h3>
-        <p>Command the LLM to add a new memory entry to the current memory file. Use the syntax:</p>
+        <h3>1. Adding Memories</h3>
+        <p>Command the LLM to store a piece of information in the current memory file:</p>
         <div class="code">
-            "Add a memory tagged as 'T' with the content: 'X' by 'Y'"
-        </div>
-        <p>Here, <code>'T'</code> is the tag (e.g., personal, work, etc.), <code>'X'</code> is the content to store, and <code>'Y'</code> indicates the source (typically 'user' or 'LLM').</p>
-
-        <h3>Recall Memory</h3>
-        <p>To retrieve and list all stored memories in the current file, instruct the LLM:</p>
-        <div class="code">
-            "List all memories from the current file"
-        </div>
-        <p>The LLM will enumerate each memory entry, providing structured database content for review.</p>
-
-        <h3>Clear All Memories</h3>
-        <p>Reset all memory entries in the current file. Execute this command:</p>
-        <div class="code">
-            "Clear all memories in the current file"
-        </div>
-        <p>Note: This action requires confirmation twice to prevent accidental data loss.</p>
-
-        <h3>Update Memory</h3>
-        <p>You can refresh an existing memory by index, modifying its tag or content. Command:</p>
-        <div class="code">
-            "Update memory at index n with tag 'T', content 'M' by 'Y'"
-        </div>
-        <p>Parameters: <code>n</code> for the index, <code>'T'</code> for the tag, <code>'M'</code> for new data, <code>'Y'</code> for originator.</p>
-
-        <h3>Delete Memory</h3>
-        <p>To remove a specific memory entry using its index, use:</p>
-        <div class="code">
-            "Delete memory at index n"
-        </div>
-        <p>For deleting multiple memories:</p>
-        <div class="code">
-            "Delete memories at indices n1, n2, ..."
+            "Add a memory with tag 'personal' and memo 'Learned a new programming concept', added by LLM"
         </div>
 
-        <h3>Manage Memory Files</h3>
-        <h4>Switch or Create Memory File</h4>
-        <p>Direct the LLM to switch to or create a new memory storage file:</p>
+        <h3>2. Recalling Memories</h3>
+        <p>Request the LLM to list all the stored memories:</p>
         <div class="code">
-            "Switch to or create memory file named 'file_name'"
+            "Recall all memories stored in the current file"
         </div>
-        <p>The LLM will carry out operations in this newly set file going forward.</p>
 
-        <h4>Delete Memory File</h4>
-        <p>Command to delete a memory file after confirming twice:</p>
+        <h3>3. Clearing Memories</h3>
+        <p>To erase all memories, confirm twice before instructing the LLM to proceed:</p>
         <div class="code">
-            "Delete memory file 'file_name'"
+            "Clear all memories after confirming"
         </div>
-        <p>The LLM ensures safe file operations, confirming availability and switching files if necessary.</p>
 
-        <h4>List Memory Files</h4>
-        <p>To inventory all memory files in the operational directory:</p>
+        <h3>4. Refreshing Memory</h3>
+        <p>Ask the LLM to optimize and refresh memory entries, including reindexing:</p>
         <div class="code">
-            "Inventory all available memory files"
+            "Refresh and optimize the memory data"
         </div>
-        <p>This provides a list of recognizable files with a .json extension.</p>
 
-        <h4>Identify Current Memory File</h4>
-        <p>To discern which memory file is currently in operation:</p>
+        <h3>5. Updating Memory Entries</h3>
+        <p>Instruct the LLM to update a specific memory based on its index:</p>
         <div class="code">
-            "Identify the current memory file"
+            "Update memory at index 3 with tag 'work' and memo 'Finish report by Monday' added by user"
         </div>
-        <p>The LLM will notify you of the active memory file name.</p>
+
+        <h3>6. Adding Multiple Memories</h3>
+        <p>Guide the LLM to add several memory entries at once:</p>
+        <div class="code">
+            "Add multiple memories [{'tag': 'personal', 'memo': 'Morning walk', 'by': 'LLM'}, {'tag': 'work', 'memo': 'Team meeting at 10 AM', 'by': 'LLM'}]"
+        </div>
+
+        <h3>7. Deleting Memory Entries</h3>
+        <p>Command the LLM to delete a specific memory by its index:</p>
+        <div class="code">
+            "Delete memory at index 5, confirmed by LLM"
+        </div>
+
+        <h3>8. Deleting Multiple Memories</h3>
+        <p>Request the LLM to remove several memories based on a list of indices:</p>
+        <div class="code">
+            "Delete memories at indices [2, 4, 6], confirmed by LLM"
+        </div>
+
+        <h3>9. Switching or Creating Memory Files</h3>
+        <p>Instruct the LLM to switch or create a new memory file to start storing entries:</p>
+        <div class="code">
+            "Switch to or create a memory file named 'project-notes'"
+        </div>
+
+        <h3>10. Listing Memory Files</h3>
+        <p>Instruct the LLM to display available memory files:</p>
+        <div class="code">
+            "List all available memory files"
+        </div>
+
+        <h3>11. Current Memory File</h3>
+        <p>Ask the LLM which memory file is currently active:</p>
+        <div class="code">
+            "Which memory file is currently in use?"
+        </div>
+        
+        <h3>12. Deleting a Memory File</h3>
+        <p>Guide the LLM to delete a specified memory file with necessary confirmation:</p>
+        <div class="code">
+            "Delete the file 'past-notes.json' after confirming twice"
+        </div>
     </section>
 
     <section>
