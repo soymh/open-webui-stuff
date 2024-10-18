@@ -513,3 +513,26 @@ class Tools:
 
         return description
 
+    async def current_memory_file(
+        self, __event_emitter__: Callable[[dict], Any] = None
+    ) -> str:
+        """
+        Retrieve the name of the currently active memory file.
+
+        :returns: A message indicating the current memory file.
+        """
+        emitter = EventEmitter(__event_emitter__)
+
+        current_file = self.memory.memory_file
+
+        message = f"Currently using memory file: {current_file}"
+
+        if self.valves.DEBUG:
+            print(message)
+
+        await emitter.emit(
+            description=message, status="current_file_retrieved", done=True
+        )
+
+        return message
+
