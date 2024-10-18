@@ -3,137 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPT4 Memory Mimic - Documentation</title>
+    <title>Memory Enhancement Tool for LLM - Documentation</title>
     <style>
         body {
-            background-color: #121212;
-            color: #eeeeee;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            text-align: center;
+            margin: 0 auto;
+            padding: 30px;
+            max-width: 800px;
         }
         header, footer {
-            background-color: #1f1f1f;
-            padding: 1em 0;
+            text-align: center;
+            margin-bottom: 40px;
         }
-        header {
-            border-bottom: 1px solid #444;
-        }
-        footer {
-            border-top: 1px solid #444;
-        }
-        h1, h2, h3 {
-            color: #ffffff;
-        }
-        .content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2em;
-        }
-        code {
-            background-color: #333;
-            color: #00ff88;
-            padding: 0.2em;
-            font-family: monospace;
-            border-radius: 3px;
-        }
-        pre {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            padding: 1em;
-            color: #ccffcc;
-            overflow: auto;
-            text-align: left;
-        }
-        .summary {
-            background-color: #1f2d3d;
-            padding: 1em;
+        .code {
+            background-color: #f4f4f4;
             border-left: 4px solid #007acc;
-            margin: 1em 0;
-            border-radius: 5px;
+            padding: 10px;
+            overflow-x: auto;
+            font-family: Consolas, Menlo, Monaco, Courier, monospace;
         }
-        .button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            margin: 5px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        a {
-            color: #33adff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #66ccff;
-        }
-        .demo-gif {
-            width: 100%;
-            max-width: 750px;
-            margin: 1em 0;
-            border-radius: 5px;
+        h2 {
+            color: #333;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>GPT4 Memory Mimic Documentation</h1>
-        <p>Author: <a href="https://github.com/mhioi" target="_blank">mhioi</a> - 2024</p>
+        <h1>Memory Enhancement Tool for LLM</h1>
+        <p>Version 1.0.0</p>
     </header>
 
-    <div class="content">
-        <section>
-            <h2>Overview</h2>
-            <p>The GPT4 Memory Mimic tool enhances the capabilities of Open WebUI by offering a sophisticated memory feature.</p>
-        </section>
+    <section>
+        <h2>Overview</h2>
+        <p>The Memory Enhancement Tool allows the integration of memory functionalities within a large language model (LLM) web UI. It provides seamless memory operations including addition, deletion, update, and switching among multiple memory files. This tool enhances the LLM's capacity to interact with historical data and manage sessions dynamically.</p>
+    </section>
 
-        <section>
-            <h2>Key Features</h2>
-            <ul>
-                <li>User-Managed Memory Entries</li>
-                <li>Automated Important Data Tagging</li>
-                <li>Dynamic Memory Updates with Index-Based System</li>
-                <li>Support for User and LLM Requested Activities</li>
-            </ul>
-        </section>
+    <section>
+        <h2>Commands for LLM</h2>
 
-        <section>
-            <h2>Code Highlights</h2>
-            <div class="summary">
-                <h3>Memory Management</h3>
-                <pre><code>def add_to_memory(self, tag: str, memo: str, by: str):
-    ...
-    self.memory_data[index] = entry
-    self.save_memory()</code></pre>
-            </div>
-            <div class="summary">
-                <h3>Automated Tagging</h3>
-                <pre><code>if tag not in self.tag_options:
-    tag = "others"</code></pre>
-            </div>
-        </section>
+        <h3>Add Memory</h3>
+        <p>To add a new memory entry in the current file, use the command:</p>
+        <div class="code">"Add a memory of the text: 'X' to current file"</div>
+        <p>Where <code>'X'</code> is the text you wish to store. The LLM will categorize and store this under an appropriate tag as per predefined categories.</p>
 
-        <section>
-            <h2>Demo GIFs</h2>
-            <img src="https://github.com/mhioi/open-webui-stuff/blob/8a5f82470750819d11e7b88e55869c66d945ee7f/examples/gpt4-memory%20mimic/gpt4-memory%20mimic.gif" alt="Managing Memory Entries" class="demo-gif">
-            <p>GIF demonstrating how to manage memory entries.</p>
-        </section>
+        <h3>Recall Memory</h3>
+        <p>To retrieve and view all memories from the current memory file, instruct:</p>
+        <div class="code">"Show all memories from the current file"</div>
 
-        <section>
-            <a href="https://github.com/mhioi/open-webui-stuff" class="button" target="_blank">Visit GitHub Repository</a>
-        </section>
-    </div>
+        <h3>Clear All Memories</h3>
+        <p>To clear all memory entries in the current file, command:</p>
+        <div class="code">"Clear all memories in the current file"</div>
+        <p>Note: This operation requires two confirmations to execute.</p>
+
+        <h3>Update Memory</h3>
+        <p>Updating an existing memory based on its index can be done via:</p>
+        <div class="code">"Update memory index n with tag 'T' and memo 'M'"</div>
+        <p>Where <code>n</code> is the index, <code>'T'</code> the tag, and <code>'M'</code> the new information to store.</p>
+
+        <h3>Delete Memory</h3>
+        <p>To delete a specific memory entry by index:</p>
+        <div class="code">"Delete memory at index n"</div>
+        <p>Where <code>n</code> signifies the position of the entry in the file. For deleting multiple: </p>
+        <div class="code">"Delete memories at indices n1, n2, ..."</div>
+
+        <h3>Memory File Operations</h3>
+        <h4>Switch or Create Memory File</h4>
+        <p>To create a new or switch to an existing memory file:</p>
+        <div class="code">"Switch or create memory file named 'file_name'"</div>
+
+        <h4>Delete Memory File</h4>
+        <p>To delete a specified memory file:</p>
+        <div class="code">"Delete memory file 'file_name'"</div>
+        <p>This requires confirmation twice. It ensures locks at alternative files before deletion if the target is current.</p>
+
+        <h4>List Memory Files</h4>
+        <p>To list all available memory files present in the directory:</p>
+        <div class="code">"List all available memory files"</div>
+
+        <h4>Current Memory File</h4>
+        <p>To know the current memory file in use:</p>
+        <div class="code">"Show the current memory file"</div>
+    </section>
 
     <footer>
-        <p>Documentation &copy; 2024 GPT4 Memory Mimic. All rights reserved.</p>
+        <p>Documentation provided by GPT-4 Memory Enhancement Team.</p>
     </footer>
 </body>
 </html>
