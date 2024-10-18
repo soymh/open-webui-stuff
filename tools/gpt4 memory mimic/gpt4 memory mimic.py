@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 0.3.0
+version: 0.4.0
 license: MIT
 """
 
@@ -306,8 +306,48 @@ class Tools:
 
         return update_message
 
+    async def add_multiple_memories(
+        self,
+        memory_entries: list,
+        llm_wants_to_add: bool,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Allows the LLM to add multiple memory entries at once.
 
-# Example of usage: instantiate Tools and call handle_input, recall_memories, or clear_memories with user queries.
+        :param memory_entries: A list of dictionary entries, each containing tag, memo, by.Usage Example: memory_entries = [{"tag": "personal", "memo": "This is a personal note", "by": "LLM"},{"tag": "work", "memo": "Project deadline is tomorrow", "by": "LLM"}]
+        :param llm_wants_to_add: Boolean indicating LLM's desire to add the memories.
+        :returns: A message indicating the success or failure of the operations.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        responses = []
 
+        if not llm_wants_to_add:
+            return "LLM has not requested to add multiple memories."
 
+        for idx, entry in enumerate(memory_entries):
+            tag = entry.get("tag", "others")
+            memo = entry.get("memo", "")
+            by = entry.get("by", "LLM")
+
+            if tag not in self.memory.tag_options:
+                tag = "others"
+
+            if self.valves.DEBUG:
+                print(f"Adding memory {idx+1}: tag={tag}, memo={memo}, by={by}")
+
+            # Add the memory
+            self.memory.add_to_memory(tag, memo, by)
+            response = f"Memory {idx+1} added with tag {tag} by {by}."
+            responses.append(response)
+
+            await emitter.emit(description=response, status="memory_update", done=False)
+
+        await emitter.emit(
+            description="All requested memories have been processed.",
+            status="memory_update_complete",
+            done=True,
+        )
+
+        return "\n".join(responses)
 
