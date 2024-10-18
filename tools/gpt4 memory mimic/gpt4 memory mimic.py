@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 0.5.0
+version: 0.1.0
 license: MIT
 """
 
@@ -21,7 +21,7 @@ class MemoryFunctions:
         self.tag_options = ["personal", "work", "education", "life", "person", "others"]
 
     def switch_memory_file(self, new_file: str):
-        """Switches and initializes operations on a new memory file."""
+        """Switches and initializes operations on a new memory FILE;only do if the user indicates a file process."""
         self.memory_file = new_file
         self.memory_data = self.load_memory()
         if self.debug:
@@ -145,7 +145,7 @@ class Tools:
             default=60,
             description="Interval in minutes to refresh and analyze memory data.",
         )
-        DEBUG: bool = Field(default=False, description="Enable or disable debug mode.")
+        DEBUG: bool = Field(default=True, description="Enable or disable debug mode.")
 
     def __init__(self):
         self.valves = self.Valves()
@@ -162,7 +162,7 @@ class Tools:
         __event_emitter__: Callable[[dict], Any] = None,
     ) -> str:
         """
-        Summarize user input and enhance responses using memory data.
+        AUTOMATICALLY Summarize user input and enhance responses using memory data.
 
         :params input_text: The TEXT .
         :returns: The response considering memory data.
@@ -202,7 +202,7 @@ class Tools:
         self, __event_emitter__: Callable[[dict], Any] = None
     ) -> str:
         """
-        Retrieve all stored memories and provide them to the user.
+        Retrieve all stored memories in current file and provide them to the user.
 
         :return: A structured representation of all memory contents.
         """
@@ -241,7 +241,7 @@ class Tools:
         self, user_confirmation: bool, __event_emitter__: Callable[[dict], Any] = None
     ) -> str:
         """
-        Clear all stored memories after user confirmation;ask twice the user for confimation.
+        Clear all stored memories in current file after user confirmation;ask twice the user for confimation.
 
         :param user_confirmation: Boolean indicating user confirmation to clear memories.
         :return: A message indicating the status of the operation.
@@ -473,7 +473,7 @@ class Tools:
         if self.valves.DEBUG:
             print(f"Switching to or creating memory file: {new_file_name}")
 
-        self.memory.switch_memory_file(new_file_name)
+        self.memory.switch_memory_file(new_file_name + ".json")
 
         message = f"Memory file switched to {new_file_name}."
 
@@ -485,7 +485,7 @@ class Tools:
         self, __event_emitter__: Callable[[dict], Any] = None
     ) -> str:
         """
-        List available memory files in the directory.
+        List available memory files in the current directory.
 
         :returns: A message with the list of available memory files.
         """
@@ -535,4 +535,94 @@ class Tools:
         )
 
         return message
+
+    async def delete_memory_file(
+        self,
+        file_to_delete: str,
+        user_confirmation: bool,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Delete a memory file with confirmation and necessary file switching.
+
+        :param file_to_delete: The name of the memory file to delete.
+        :param user_confirmation: Boolean indicating user confirmation for deletion.
+        :returns: A message indicating the success or failure of the deletion.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        available_files = [f for f in os.listdir(".") if f.endswith(".json")]
+
+        if file_to_delete not in available_files:
+            message = f"File '{file_to_delete}' does not exist."
+            await emitter.emit(description=message, status="file_not_found", done=True)
+            if self.valves.DEBUG:
+                print(message)
+            return message
+
+        if self.confirmation_pending and user_confirmation:
+            try:
+                if self.memory.memory_file == file_to_delete:
+                    # Switch to another file before deleting the current one
+                    alternative_file = next(
+                        (f for f in available_files if f != file_to_delete), None
+                    )
+                    if not alternative_file:
+                        message = (
+                            "No alternative memory file to switch to. Deletion aborted."
+                        )
+                        await emitter.emit(
+                            description=message, status="no_alternative_file", done=True
+                        )
+                        if self.valves.DEBUG:
+                            print(message)
+                        return message
+
+                    self.memory.switch_memory_file(alternative_file)
+                    switch_message = f"Switched to '{alternative_file}'. Now deleting '{file_to_delete}'."
+                    await emitter.emit(
+                        description=switch_message, status="file_switched", done=False
+                    )
+                    if self.valves.DEBUG:
+                        print(switch_message)
+
+                os.remove(file_to_delete)
+                message = f"File '{file_to_delete}' deleted successfully."
+                status = "file_deletion_complete"
+            except Exception as e:
+                message = f"Error deleting file '{file_to_delete}': {str(e)}"
+                status = "deletion_error"
+
+            await emitter.emit(description=message, status=status, done=True)
+            self.confirmation_pending = False
+            return message
+
+        if not self.confirmation_pending:
+            self.confirmation_pending = True
+            confirmation_message = (
+                "Please confirm that you want to delete the memory file. "
+                "Call this function again with confirmation."
+            )
+            await emitter.emit(
+                description=confirmation_message,
+                status="confirmation_required",
+                done=False,
+            )
+            return json.dumps(
+                {
+                    "message": "Please confirm to delete the memory file.",
+                    "file": file_to_delete,
+                },
+                ensure_ascii=False,
+            )
+
+        await emitter.emit(
+            description="Deletion of memory file aborted.",
+            status="deletion_aborted",
+            done=True,
+        )
+        self.confirmation_pending = False
+        return json.dumps(
+            {"message": "Memory file deletion aborted.", "file": file_to_delete},
+            ensure_ascii=False,
+        )
 
