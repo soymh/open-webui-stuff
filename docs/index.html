@@ -10,21 +10,28 @@
             line-height: 1.6;
             margin: 0 auto;
             padding: 30px;
-            max-width: 800px;
+            max-width: 900px;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
         }
         header, footer {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .code {
-            background-color: #f4f4f4;
+            background-color: #2e2e2e;
             border-left: 4px solid #007acc;
             padding: 10px;
             overflow-x: auto;
             font-family: Consolas, Menlo, Monaco, Courier, monospace;
+            margin: 20px 0;
+            color: #dcdcdc;
         }
-        h2 {
-            color: #333;
+        h2, h3, h4 {
+            color: #66c2ff;
+        }
+        p {
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -32,62 +39,101 @@
     <header>
         <h1>Memory Enhancement Tool for LLM</h1>
         <p>Version 1.0.0</p>
+        <p>Author: mhioi</p>
     </header>
 
     <section>
         <h2>Overview</h2>
-        <p>The Memory Enhancement Tool allows the integration of memory functionalities within a large language model (LLM) web UI. It provides seamless memory operations including addition, deletion, update, and switching among multiple memory files. This tool enhances the LLM's capacity to interact with historical data and manage sessions dynamically.</p>
+        <p>The Memory Enhancement Tool augments the functionality of a local large language model (LLM) web interface by integrating persistent memory operations. This tool allows the LLM to manage data dynamically through operations such as adding, deleting, updating, and switching among different memory files. Its capabilities enable the LLM to maintain context across interactions, providing a more human-like, memory-enhanced interaction approach.</p>
     </section>
 
     <section>
         <h2>Commands for LLM</h2>
 
         <h3>Add Memory</h3>
-        <p>To add a new memory entry in the current file, use the command:</p>
-        <div class="code">"Add a memory of the text: 'X' to current file"</div>
-        <p>Where <code>'X'</code> is the text you wish to store. The LLM will categorize and store this under an appropriate tag as per predefined categories.</p>
+        <p>Command the LLM to add a new memory entry to the current memory file. Use the syntax:</p>
+        <div class="code">
+            "Add a memory tagged as 'T' with the content: 'X' by 'Y'"
+        </div>
+        <p>Here, <code>'T'</code> is the tag (e.g., personal, work, etc.), <code>'X'</code> is the content to store, and <code>'Y'</code> indicates the source (typically 'user' or 'LLM').</p>
 
         <h3>Recall Memory</h3>
-        <p>To retrieve and view all memories from the current memory file, instruct:</p>
-        <div class="code">"Show all memories from the current file"</div>
+        <p>To retrieve and list all stored memories in the current file, instruct the LLM:</p>
+        <div class="code">
+            "List all memories from the current file"
+        </div>
+        <p>The LLM will enumerate each memory entry, providing structured database content for review.</p>
 
         <h3>Clear All Memories</h3>
-        <p>To clear all memory entries in the current file, command:</p>
-        <div class="code">"Clear all memories in the current file"</div>
-        <p>Note: This operation requires two confirmations to execute.</p>
+        <p>Reset all memory entries in the current file. Execute this command:</p>
+        <div class="code">
+            "Clear all memories in the current file"
+        </div>
+        <p>Note: This action requires confirmation twice to prevent accidental data loss.</p>
 
         <h3>Update Memory</h3>
-        <p>Updating an existing memory based on its index can be done via:</p>
-        <div class="code">"Update memory index n with tag 'T' and memo 'M'"</div>
-        <p>Where <code>n</code> is the index, <code>'T'</code> the tag, and <code>'M'</code> the new information to store.</p>
+        <p>You can refresh an existing memory by index, modifying its tag or content. Command:</p>
+        <div class="code">
+            "Update memory at index n with tag 'T', content 'M' by 'Y'"
+        </div>
+        <p>Parameters: <code>n</code> for the index, <code>'T'</code> for the tag, <code>'M'</code> for new data, <code>'Y'</code> for originator.</p>
 
         <h3>Delete Memory</h3>
-        <p>To delete a specific memory entry by index:</p>
-        <div class="code">"Delete memory at index n"</div>
-        <p>Where <code>n</code> signifies the position of the entry in the file. For deleting multiple: </p>
-        <div class="code">"Delete memories at indices n1, n2, ..."</div>
+        <p>To remove a specific memory entry using its index, use:</p>
+        <div class="code">
+            "Delete memory at index n"
+        </div>
+        <p>For deleting multiple memories:</p>
+        <div class="code">
+            "Delete memories at indices n1, n2, ..."
+        </div>
 
-        <h3>Memory File Operations</h3>
+        <h3>Manage Memory Files</h3>
         <h4>Switch or Create Memory File</h4>
-        <p>To create a new or switch to an existing memory file:</p>
-        <div class="code">"Switch or create memory file named 'file_name'"</div>
+        <p>Direct the LLM to switch to or create a new memory storage file:</p>
+        <div class="code">
+            "Switch to or create memory file named 'file_name'"
+        </div>
+        <p>The LLM will carry out operations in this newly set file going forward.</p>
 
         <h4>Delete Memory File</h4>
-        <p>To delete a specified memory file:</p>
-        <div class="code">"Delete memory file 'file_name'"</div>
-        <p>This requires confirmation twice. It ensures locks at alternative files before deletion if the target is current.</p>
+        <p>Command to delete a memory file after confirming twice:</p>
+        <div class="code">
+            "Delete memory file 'file_name'"
+        </div>
+        <p>The LLM ensures safe file operations, confirming availability and switching files if necessary.</p>
 
         <h4>List Memory Files</h4>
-        <p>To list all available memory files present in the directory:</p>
-        <div class="code">"List all available memory files"</div>
+        <p>To inventory all memory files in the operational directory:</p>
+        <div class="code">
+            "Inventory all available memory files"
+        </div>
+        <p>This provides a list of recognizable files with a .json extension.</p>
 
-        <h4>Current Memory File</h4>
-        <p>To know the current memory file in use:</p>
-        <div class="code">"Show the current memory file"</div>
+        <h4>Identify Current Memory File</h4>
+        <p>To discern which memory file is currently in operation:</p>
+        <div class="code">
+            "Identify the current memory file"
+        </div>
+        <p>The LLM will notify you of the active memory file name.</p>
+    </section>
+
+    <section>
+        <h2>Advanced Operations</h2>
+        <h3>Memory Persistence and Debugging</h3>
+        <p>Toggle the persistence features via the LLM by specifying debug mode or memory interval checkpointing. The debug mode allows you to trace operations with detailed logs:</p>
+        <div class="code">
+            "Enable debug mode"
+        </div>
+        <p>Manage refresh intervals:</p>
+        <div class="code">
+            "Set memory refresh interval to n minutes"
+        </div>
+        <p>Streamline memory management, ensuring that large data sets remain organized and search operations remain efficient.</p>
     </section>
 
     <footer>
-        <p>Documentation provided by GPT-4 Memory Enhancement Team.</p>
+        <p>Documentation presented by GPT-4 Memory Enhancement Team. For more details or issues, please contact support.</p>
     </footer>
 </body>
 </html>
