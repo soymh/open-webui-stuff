@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 0.4.0
+version: 0.3.0
 license: MIT
 """
 
@@ -19,6 +19,14 @@ class MemoryFunctions:
         self.debug = debug
         self.memory_data = self.load_memory()
         self.tag_options = ["personal", "work", "education", "life", "person", "others"]
+
+    def delete_memory_by_index(self, index: int):
+        if index in self.memory_data:
+            del self.memory_data[index]
+            self.save_memory()
+            return f"Memory index {index} deleted successfully."
+        else:
+            return f"Memory index {index} does not exist."
 
     def update_memory_by_index(self, index: int, tag: str, memo: str, by: str):
         if index in self.memory_data:
@@ -285,7 +293,7 @@ class Tools:
         """
         Update an existing memory entry based on its index.
 
-        :param index: The index of the memory entry to update.
+        :param index: The index of the memory entry to update,STARTING FROM 1.
         :param tag: The tag for the memory entry.
         :param memo: The memory information to update.
         :param by: Who is making the update ('user' or 'LLM').
@@ -350,4 +358,33 @@ class Tools:
         )
 
         return "\n".join(responses)
+
+    async def delete_memory_entry(
+        self,
+        index: int,
+        llm_wants_to_delete: bool,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Delete a memory entry based on its index.
+
+        :param index: The index of the memory entry to delete,STARTING FROM 1.
+        :param llm_wants_to_delete: Boolean indicating if the LLM has requested the deletion.
+        :returns: A message indicating the success or failure of the deletion.
+        """
+        emitter = EventEmitter(__event_emitter__)
+
+        if not llm_wants_to_delete:
+            return "LLM has not requested to delete a memory."
+
+        if self.valves.DEBUG:
+            print(f"Attempting to delete memory at index {index}")
+
+        deletion_message = self.memory.delete_memory_by_index(index)
+
+        await emitter.emit(
+            description=deletion_message, status="memory_deletion", done=True
+        )
+
+        return deletion_message
 
