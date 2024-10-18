@@ -388,3 +388,41 @@ class Tools:
 
         return deletion_message
 
+    async def delete_multiple_memories(
+        self,
+        indices: list,
+        llm_wants_to_delete: bool,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Delete multiple memory entries based on their indices.
+
+        :param indices: A list of indices of the memory entries to delete,STARTING FROM 1.
+        :param llm_wants_to_delete: Boolean indicating if the LLM has requested the deletions.
+        :returns: A message indicating the success or failure of the deletions.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        responses = []
+
+        if not llm_wants_to_delete:
+            return "LLM has not requested to delete multiple memories."
+
+        for index in indices:
+            if self.valves.DEBUG:
+                print(f"Attempting to delete memory at index {index}")
+
+            deletion_message = self.memory.delete_memory_by_index(index)
+            responses.append(deletion_message)
+
+            await emitter.emit(
+                description=deletion_message, status="memory_deletion", done=False
+            )
+
+        await emitter.emit(
+            description="All requested memory deletions have been processed.",
+            status="memory_deletion_complete",
+            done=True,
+        )
+
+        return "\n".join(responses)
+
