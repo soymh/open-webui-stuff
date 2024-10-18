@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 0.3.0
+version: 0.5.0
 license: MIT
 """
 
@@ -19,6 +19,28 @@ class MemoryFunctions:
         self.debug = debug
         self.memory_data = self.load_memory()
         self.tag_options = ["personal", "work", "education", "life", "person", "others"]
+
+    def switch_memory_file(self, new_file: str):
+        """Switches and initializes operations on a new memory file."""
+        self.memory_file = new_file
+        self.memory_data = self.load_memory()
+        if self.debug:
+            print(f"Switched to memory file: {self.memory_file}")
+
+    def reindex_memory(self):
+        if self.debug:
+            print("Reindexing memory entries.")
+
+        # Reindex memory in ascending order
+        sorted_indices = sorted(self.memory_data.keys())
+        reindexed_memory = {
+            new_index + 1: self.memory_data[old_index]
+            for new_index, old_index in enumerate(sorted_indices)
+        }
+        self.memory_data = reindexed_memory
+        self.save_memory()
+
+        return "Memory reindexed successfully."
 
     def delete_memory_by_index(self, index: int):
         if index in self.memory_data:
@@ -264,7 +286,9 @@ class Tools:
 
     async def refresh_memory(self, __event_emitter__: Callable[[dict], Any] = None):
         """
-        Periodically refresh and optimize memory data.
+        Periodically refresh and optimize memory data, includes reindexing.
+
+        :returns: A message indicating the status of the refresh operation.
         """
         emitter = EventEmitter(__event_emitter__)
         await emitter.emit("Starting memory refresh process.")
@@ -273,7 +297,16 @@ class Tools:
             print("Refreshing memory...")
 
         if self.valves.USE_MEMORY:
-            pass  # Implement any periodic memory cleanup here
+            refresh_message = self.memory.reindex_memory()
+
+            if self.valves.DEBUG:
+                print(refresh_message)
+
+            await emitter.emit(
+                description=refresh_message, status="memory_refresh", done=True
+            )
+
+            return refresh_message
 
         if self.valves.DEBUG:
             print("Memory refreshed.")
@@ -425,4 +458,58 @@ class Tools:
         )
 
         return "\n".join(responses)
+
+    async def create_or_switch_memory_file(
+        self, new_file_name: str, __event_emitter__: Callable[[dict], Any] = None
+    ) -> str:
+        """
+        Create a new memory file or switch to an existing one.
+
+        :param new_file_name: The name of the new or existing memory file.
+        :returns: A message indicating the success or failure of the operation.
+        """
+        emitter = EventEmitter(__event_emitter__)
+
+        if self.valves.DEBUG:
+            print(f"Switching to or creating memory file: {new_file_name}")
+
+        self.memory.switch_memory_file(new_file_name)
+
+        message = f"Memory file switched to {new_file_name}."
+
+        await emitter.emit(description=message, status="file_switching", done=True)
+
+        return message
+
+    async def list_memory_files(
+        self, __event_emitter__: Callable[[dict], Any] = None
+    ) -> str:
+        """
+        List available memory files in the directory.
+
+        :returns: A message with the list of available memory files.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        memory_files = []
+
+        if self.valves.DEBUG:
+            print("Listing memory files in current directory: ")
+
+        try:
+            for file in os.listdir("."):
+                if file.endswith(".json"):
+                    if self.valves.DEBUG:
+                        print(f"Found memory file: {file}")
+                    memory_files.append(file)
+
+            description = "Available memory files: " + ", ".join(memory_files)
+            status = "file_listing_complete"
+
+        except Exception as e:
+            description = f"Error accessing directory: {str(e)}"
+            status = "file_listing_error"
+
+        await emitter.emit(description=description, status=status, done=True)
+
+        return description
 
