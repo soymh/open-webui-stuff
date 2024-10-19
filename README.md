@@ -10,7 +10,7 @@ This repository provides a powerful memory management enhancement tool for a loc
 
 1st way. Go to [this](https://openwebui.com/t/mhio/gpt4_memory_mimic) link and install.
 
-2nd way. Navigate into the tools directory in this project,download json file of the tool and import it in the tools section of your open WebUI:
+2nd way. Navigate into the tools directory in this project,download json file of the tool and import it in the tools section of your open WebUI.
 
 ## Usage of Tools Class Functions By the LLM
 
@@ -163,8 +163,8 @@ await tools.execute_functions_sequentially(
     ]
 )
 ```
-
-### download_memory_file
+### Future updates:
+#### download_memory_file
 
 **Description**: Provide a download link for a memory file, or archive all memory files for download.
 
