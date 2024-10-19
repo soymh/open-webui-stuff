@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 1.0.0
+version: 1.4.0
 license: MIT
 """
 
@@ -14,15 +14,19 @@ from pydantic import BaseModel, Field
 
 
 class MemoryFunctions:
-    def __init__(self, memory_file="memory.json", debug=False):
-        self.memory_file = memory_file
+    def __init__(
+        self, memory_file="memory.json", debug=False, directory="memory_jsons"
+    ):
+        self.directory = directory
+        os.makedirs(self.directory, exist_ok=True)  # Ensure the directory exists
+        self.memory_file = os.path.join(self.directory, memory_file)
         self.debug = debug
         self.memory_data = self.load_memory()
         self.tag_options = ["personal", "work", "education", "life", "person", "others"]
 
     def switch_memory_file(self, new_file: str):
-        """Switches and initializes operations on a new memory FILE;only do if the user indicates a file process."""
-        self.memory_file = new_file
+        """Switch and initialize operations on a new memory file in designated directory."""
+        self.memory_file = os.path.join(self.directory, new_file)
         self.memory_data = self.load_memory()
         if self.debug:
             print(f"Switched to memory file: {self.memory_file}")
@@ -66,6 +70,54 @@ class MemoryFunctions:
             return f"Memory index {index} updated successfully."
         else:
             return f"Memory index {index} does not exist."
+
+    async def update_multiple_memories(
+        self,
+        memory_updates: list,
+        llm_wants_to_update: bool,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Update multiple memory entries at once.
+
+        :param memory_updates: A list of updates, each containing index, tag, memo, by.
+                               Example: [{'index': 1, 'tag': 'work', 'memo': 'Updated memo', 'by': 'LLM'}, ...]
+        :param llm_wants_to_update: Boolean indicating if the LLM has requested the updates.
+        :returns: A message indicating the success or failure of the operations.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        responses = []
+
+        if not llm_wants_to_update:
+            return "LLM has not requested to update multiple memories."
+
+        for update in memory_updates:
+            index = update.get("index")
+            tag = update.get("tag", "others")
+            memo = update.get("memo", "")
+            by = update.get("by", "LLM")
+
+            if tag not in self.memory.tag_options:
+                tag = "others"  # Default tag to 'others' if invalid
+
+            if self.valves.DEBUG:
+                print(f"Updating memory {index}: tag={tag}, memo={memo}, by={by}")
+
+            # Update the memory
+            update_message = self.memory.update_memory_by_index(index, tag, memo, by)
+            responses.append(update_message)
+
+            await emitter.emit(
+                description=update_message, status="memory_update", done=False
+            )
+
+        await emitter.emit(
+            description="All requested memory updates have been processed.",
+            status="memory_update_complete",
+            done=True,
+        )
+
+        return "\n".join(responses)
 
     def load_memory(self):
         if os.path.exists(self.memory_file):
@@ -485,7 +537,7 @@ class Tools:
         self, __event_emitter__: Callable[[dict], Any] = None
     ) -> str:
         """
-        List available memory files in the current directory.
+        List available memory files in the designated directory.
 
         :returns: A message with the list of available memory files.
         """
@@ -493,10 +545,10 @@ class Tools:
         memory_files = []
 
         if self.valves.DEBUG:
-            print("Listing memory files in current directory: ")
+            print(f"Listing memory files in directory: {self.memory.directory}")
 
         try:
-            for file in os.listdir("."):
+            for file in os.listdir(self.memory.directory):
                 if file.endswith(".json"):
                     if self.valves.DEBUG:
                         print(f"Found memory file: {file}")
@@ -543,17 +595,20 @@ class Tools:
         __event_emitter__: Callable[[dict], Any] = None,
     ) -> str:
         """
-        Delete a memory file with confirmation and necessary file switching.
+        Delete a memory file in the designated directory with confirmation and necessary file switching.
 
         :param file_to_delete: The name of the memory file to delete.
         :param user_confirmation: Boolean indicating user confirmation for deletion.
         :returns: A message indicating the success or failure of the deletion.
         """
         emitter = EventEmitter(__event_emitter__)
-        available_files = [f for f in os.listdir(".") if f.endswith(".json")]
+        file_path = os.path.join(self.memory.directory, file_to_delete)
+        available_files = [
+            f for f in os.listdir(self.memory.directory) if f.endswith(".json")
+        ]
 
         if file_to_delete not in available_files:
-            message = f"File '{file_to_delete}' does not exist."
+            message = f"File '{file_to_delete}' does not exist in the directory."
             await emitter.emit(description=message, status="file_not_found", done=True)
             if self.valves.DEBUG:
                 print(message)
@@ -561,7 +616,7 @@ class Tools:
 
         if self.confirmation_pending and user_confirmation:
             try:
-                if self.memory.memory_file == file_to_delete:
+                if self.memory.memory_file == file_path:
                     # Switch to another file before deleting the current one
                     alternative_file = next(
                         (f for f in available_files if f != file_to_delete), None
@@ -585,7 +640,7 @@ class Tools:
                     if self.valves.DEBUG:
                         print(switch_message)
 
-                os.remove(file_to_delete)
+                os.remove(file_path)
                 message = f"File '{file_to_delete}' deleted successfully."
                 status = "file_deletion_complete"
             except Exception as e:
