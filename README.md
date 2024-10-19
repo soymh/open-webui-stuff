@@ -1,4 +1,4 @@
-# Memory Enhancement Tool for LLM Web UI
+# Memory Enhancement Tool for Open WebUI
 
 **Author**: [mhioi](https://github.com/mhioi)  
 **Version**: 1.4.0  
@@ -8,16 +8,10 @@ This repository provides a powerful memory management enhancement tool for a loc
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/memory-enhancement-tool.git
-   ```
-2. Navigate into the directory:
-   ```bash
-   cd memory-enhancement-tool
-   ```
+1st way. Go to [this](https://openwebui.com/t/mhio/gpt4_memory_mimic) link and install.
+2nd way. Navigate into the tools directory in this project,download json file of the tool and import it in the tools section of your open WebUI:
 
-## Usage of Tools Class Functions
+## Usage of Tools Class Functions By the LLM
 
 ### handle_input
 
