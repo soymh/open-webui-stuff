@@ -626,3 +626,63 @@ class Tools:
             ensure_ascii=False,
         )
 
+    async def execute_functions_sequentially(
+        self,
+        function_calls: list,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> dict:
+        """
+        Execute a series of functions in sequence.
+
+        :param function_calls: A list of dictionaries each containing 'name' and 'params'.
+                               Example: [{'name': 'handle_input', 'params': {...}}, ...]
+        :returns: A dictionary with results of each function call.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        results = {}
+
+        for call in function_calls:
+            func_name = call.get("name")
+            params = call.get("params", {})
+
+            if hasattr(self, func_name) and callable(getattr(self, func_name)):
+                if self.valves.DEBUG:
+                    print(f"Executing function: {func_name} with params: {params}")
+
+                await emitter.emit(
+                    f"Executing {func_name}", status="function_execution", done=False
+                )
+
+                try:
+                    func = getattr(self, func_name)
+                    result = await func(__event_emitter__=__event_emitter__, **params)
+                    results[func_name] = result
+
+                    await emitter.emit(
+                        description=f"{func_name} executed successfully.",
+                        status="function_complete",
+                        done=False,
+                    )
+                except Exception as e:
+                    error_msg = f"Error executing {func_name}: {str(e)}"
+                    results[func_name] = error_msg
+
+                    await emitter.emit(
+                        description=error_msg, status="function_error", done=False
+                    )
+            else:
+                error_msg = f"Function {func_name} not found or not callable."
+                results[func_name] = error_msg
+
+                await emitter.emit(
+                    description=error_msg, status="function_missing", done=False
+                )
+
+        await emitter.emit(
+            description="All requested functions have been processed.",
+            status="execution_complete",
+            done=True,
+        )
+
+        return f"executed successfully :{results}"
+
