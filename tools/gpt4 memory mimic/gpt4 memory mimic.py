@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 1.4.0
+version: 1.5.0
 license: MIT
 """
 
@@ -11,6 +11,11 @@ from typing import Callable, Any
 import asyncio
 import datetime
 from pydantic import BaseModel, Field
+import tarfile
+import socket
+import threading
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
 
 
 class MemoryFunctions:
@@ -740,4 +745,95 @@ class Tools:
         )
 
         return f"executed successfully :{results}"
+
+    async def download_memory(
+        self,
+        memory_file_name: str,
+        download_all: bool,
+        __event_emitter__: Callable[[dict], Any] = None,
+    ) -> str:
+        """
+        Download a specific memory file or all memory files in a tarball;ONLY FOR 14 SECONDS, AND WHEN LLM ANSWERS THE LINK IS EXPIRED
+
+        :param memory_file_name: Name of the memory file or target tarball name.
+        :param download_all: Boolean indicating whether to download all memories as a tarball.
+        :returns: A message with a link or status of the operation.
+        """
+        emitter = EventEmitter(__event_emitter__)
+        available_files = os.listdir(self.memory.directory)
+        found_files = []
+
+        if download_all:
+            tarball_path = os.path.join(self.memory.directory, "all_memories.tar.gz")
+            with tarfile.open(tarball_path, "w:gz") as tar:
+                for file in available_files:
+                    if file.endswith(".json"):
+                        tar.add(os.path.join(self.memory.directory, file), arcname=file)
+                        found_files.append(file)
+
+            target_file = tarball_path
+        else:
+            file_path = os.path.join(self.memory.directory, memory_file_name)
+            if memory_file_name in available_files:
+                target_file = file_path
+                found_files.append(memory_file_name)
+            else:
+                matched = sorted(f for f in available_files if memory_file_name in f)
+                if matched:
+                    target_file = os.path.join(self.memory.directory, matched[0])
+                    found_files.append(matched[0])
+                else:
+                    message = f"No memory file matching '{memory_file_name}' was found."
+                    await emitter.emit(
+                        description=message, status="file_not_found", done=True
+                    )
+                    if self.valves.DEBUG:
+                        print(message)
+                    return message
+
+        if not found_files:
+            message = "No files were found to download."
+            await emitter.emit(description=message, status="not_found", done=True)
+            if self.valves.DEBUG:
+                print(message)
+            return message
+
+        httpd = None
+        try:
+            handler = SimpleHTTPRequestHandler
+            handler.directory = self.memory.directory
+            httpd = TCPServer(("", 0), handler)
+            ip, port = httpd.server_address
+            server_url = f"http://{ip}:{port}/{target_file}"
+
+            # Start the server in a new thread
+            server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+            server_thread.start()
+
+            message = f"Download available for 14 seconds in this link: {server_url}"
+            await emitter.emit(description=message, status="download", done=True)
+            if self.valves.DEBUG:
+                print(message)
+
+            # Give the user time to download
+            await asyncio.sleep(14)
+            return "TELL THE USER THAT LINK IS EXPIRED AND YOU SHOULD HAVE DOWNLOADED FILES!"
+        except Exception as e:
+            message = f"Error setting up download server: {str(e)}"
+            await emitter.emit(description=message, status="download_error", done=True)
+            if self.valves.DEBUG:
+                print(message)
+        finally:
+            if httpd:
+                httpd.shutdown()  # Ensure server is shut down
+            if os.path.exists(target_file):
+                os.remove(target_file)  # Delete the file after the server is shut down
+                if self.valves.DEBUG:
+                    await emitter.emit(
+                        description="file deleted sucessfully",
+                        status=f"Deleted file: {target_file}",
+                        done=True,
+                    )
+                    print(f"Deleted file: {target_file}")
+        return message
 
