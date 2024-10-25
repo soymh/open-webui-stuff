@@ -1,24 +1,26 @@
 # Memory Enhancement Tool for Open WebUI
 
 **Author**: [mhioi](https://github.com/mhioi)  
-**Version**: 1.4.0  
+**Version**: 1.5.0  
 **License**: MIT  
 
-This repository provides a powerful memory management enhancement tool for a local large language model (LLM) web UI. It offers a series of functionalities to handle memory files and provide interactions through an easy-to-use API. Below you'll find a detailed overview of each function within the `Tools` class, along with sample usage commands.
+Hey there! Welcome to the Memory Enhancement Tool for Open WebUI repository. Here, we're all about making memory management seamless and effective for your local LLM web UI. With this tool, you get a suite of functionalities to manage memory files and foster rich interactions through a straightforward API. Let's dive into what you can do with each function in the `Tools` class.
 
 ## Installation
 
-1st way. Go to [this](https://openwebui.com/t/mhio/gpt4_memory_mimic) link and install.
+Ready to get started? Here’s how you can install the tool:
 
-2nd way. Navigate into the tools directory in this project,download json file of the tool and import it in the tools section of your open WebUI.
+1. **Quick Start**: Visit [this link](https://openwebui.com/t/mhio/gpt4_memory_mimic) and follow the install instructions.
 
-## Usage of Tools Class Functions By the LLM
+2. **Manual Setup**: Head to the tools directory in our project, download the JSON file of the tool, and import it into the tools section of your Open WebUI.
+
+## Using the Tools Class Functions
 
 ### handle_input
 
-**Description**: Automatically summarize user input and enhance responses using memory data. 
+**What it does**: This function smartly summarizes user input and improves responses using memory data.
 
-**Command**: *Handle input of "X" as a memory with the tag "Y" in the current memory file.*
+**When to use**: Whenever you want to handle input "X" tagged as "Y" in the current memory file. 
 
 ```python
 await tools.handle_input(
@@ -32,9 +34,9 @@ await tools.handle_input(
 
 ### recall_memories
 
-**Description**: Retrieve all stored memories in the current file and provide them to the user.
+**What it does**: Fetch all the sweet memories you’ve stored in the current file.
 
-**Command**: *Recall all memories stored in the current file.*
+**When to use**: When you need a recap of all stored memories.
 
 ```python
 await tools.recall_memories()
@@ -42,19 +44,19 @@ await tools.recall_memories()
 
 ### clear_memories
 
-**Description**: Clear all stored memories in the current file after user confirmation (requires confirmation twice).
+**What it does**: Clears all stored memories in the current file after double confirmation. 
 
-**Command**: *Clear all memories in the current file after two confirmations.*
+**When to use**: Ideal for when you're ready to start fresh.
 
 ```python
-await tools.clear_memories(user_confirmation=True)  # Call twice with True after initial confirmation.
+await tools.clear_memories(user_confirmation=True)  # Call twice to fully confirm.
 ```
 
 ### refresh_memory
 
-**Description**: Refresh and optimize memory data, including reindexing.
+**What it does**: Refreshes and optimizes the memory data, keeping it organized.
 
-**Command**: *Refresh and optimize the memory data, including reindexing operations.*
+**When to use**: Perfect for routine maintenance to ensure everything's running smoothly.
 
 ```python
 await tools.refresh_memory()
@@ -62,9 +64,9 @@ await tools.refresh_memory()
 
 ### update_memory_entry
 
-**Description**: Update an existing memory entry based on its index.
+**What it does**: Updates an existing memory entry based on its index.
 
-**Command**: *Update memory entry with index X to have tag "Y" and memo "Z" by user.*
+**When to use**: Use this for quick edits to your memories!
 
 ```python
 await tools.update_memory_entry(index=X, tag="Y", memo="Z", by="user")
@@ -72,9 +74,9 @@ await tools.update_memory_entry(index=X, tag="Y", memo="Z", by="user")
 
 ### add_multiple_memories
 
-**Description**: Add multiple memory entries simultaneously.
+**What it does**: Lets you add several memory entries in one go.
 
-**Command**: *Add multiple memories with specified tags and memos in the current memory file.*
+**When to use**: If you’ve got a bunch of notes to add, this one’s for you!
 
 ```python
 await tools.add_multiple_memories(
@@ -88,9 +90,9 @@ await tools.add_multiple_memories(
 
 ### delete_memory_entry
 
-**Description**: Delete a specific memory entry based on its index after confirmation.
+**What it does**: Removes a specific memory entry based on its index, with confirmation.
 
-**Command**: *Delete the memory entry at index X after confirming deletion.*
+**When to use**: When a memory entry has run its course and you’re ready to say goodbye.
 
 ```python
 await tools.delete_memory_entry(index=X, llm_wants_to_delete=True)
@@ -98,9 +100,9 @@ await tools.delete_memory_entry(index=X, llm_wants_to_delete=True)
 
 ### delete_multiple_memories
 
-**Description**: Delete multiple memory entries in one go based on their indices.
+**What it does**: Delete multiple entries at once, based on their indices.
 
-**Command**: *Delete multiple memory entries specified by their indices.*
+**When to use**: Clearing out several entries in a swoop? Try this!
 
 ```python
 await tools.delete_multiple_memories(indices=[1, 3, 5], llm_wants_to_delete=True)
@@ -108,9 +110,9 @@ await tools.delete_multiple_memories(indices=[1, 3, 5], llm_wants_to_delete=True
 
 ### create_or_switch_memory_file
 
-**Description**: Create a new memory file or switch to an existing one.
+**What it does**: Creates or switches to a specified memory file.
 
-**Command**: *Switch to a new or existing memory file named "file_name".*
+**When to use**: Whenever you need to organize your memories into a different file.
 
 ```python
 await tools.create_or_switch_memory_file("file_name")
@@ -118,9 +120,9 @@ await tools.create_or_switch_memory_file("file_name")
 
 ### list_memory_files
 
-**Description**: List all available memory files in the designated directory.
+**What it does**: Lists all available memory files in your go-to directory.
 
-**Command**: *List all memory files available in the working directory.*
+**When to use**: Curious about what files you have? This command lists them all.
 
 ```python
 await tools.list_memory_files()
@@ -128,9 +130,9 @@ await tools.list_memory_files()
 
 ### current_memory_file
 
-**Description**: Retrieve the name of the currently active memory file.
+**What it does**: Tells you which memory file is currently active.
 
-**Command**: *Fetch the name of the currently active memory file.*
+**When to use**: A quick check-in to see where your memories are hanging out.
 
 ```python
 await tools.current_memory_file()
@@ -138,22 +140,22 @@ await tools.current_memory_file()
 
 ### delete_memory_file
 
-**Description**: Delete a memory file with user confirmation and necessary file switching.
+**What it does**: Deletes a memory file, with confirmation and necessary switching.
 
-**Command**: *Delete a memory file after confirming and managing active file switching.*
+**When to use**: Use when you’ve decided you no longer need a particular file.
 
 ```python
 await tools.delete_memory_file(
     file_to_delete="file_name.json",
-    user_confirmation=True  # Call twice with True for confirmation.
+    user_confirmation=True  # Remember to confirm twice!
 )
 ```
 
 ### execute_functions_sequentially
 
-**Description**: Execute a series of functions in sequence.
+**What it does**: Executes a series of functions, one after the other.
 
-**Command**: *Execute a sequence of functions as planned.*
+**When to use**: Planning a string of operations? Execute them seamlessly!
 
 ```python
 await tools.execute_functions_sequentially(
@@ -163,12 +165,13 @@ await tools.execute_functions_sequentially(
     ]
 )
 ```
+
 ### Future updates:
 #### download_memory_file
 
-**Description**: Provide a download link for a memory file, or archive all memory files for download.
+**What it does**: Offers a link to download a specified memory file or an archive of all memory files.
 
-**Command**: *Download the specified memory file or archive all as a tar for download.*
+**When to use**: When you want to keep a local copy or share your memory files.
 
 ```python
 await tools.download_memory_file(port=8080, file_name="memory.json")
@@ -177,8 +180,21 @@ await tools.download_memory_file(port=8080, all_files=True)
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository and submit your pull requests.
+We’d love your help! If you’d like to contribute, please fork the repository and send in your pull requests.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project proudly operates under the MIT License. For more details, check out the [LICENSE](LICENSE) file.
+
+Happy memory managing!
+```
+
+### Key Improvements
+
+- **Engaging Language**: The text is designed to connect with users in a conversational tone while being informative.
+  
+- **Clear Usage Instructions**: Each section now pairs the description with a straightforward command to enhance understanding.
+
+- **Consistency**: Consistent headers and descriptions guide readers through each function without unnecessary complexity.
+
+This README is more inviting and should help users seamlessly engage with your tool.
