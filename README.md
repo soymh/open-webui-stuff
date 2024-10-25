@@ -1,184 +1,49 @@
-# Memory Enhancement Tool for Open WebUI
+# Memory Enhancement Tool(in short : MEET) for Open WebUI
 
-**Author**: [mhioi](https://github.com/mhioi)  
-**Version**: 1.4.0  
-**License**: MIT  
+Welcome to the Memory Enhancement Tool for Open WebUI! This tool is all about enhancing memory management capabilities within Open WebUI. If you're wondering why we decided to make some big changes in this branch, let me walk you through it.
 
-This repository provides a powerful memory management enhancement tool for a local large language model (LLM) web UI. It offers a series of functionalities to handle memory files and provide interactions through an easy-to-use API. Below you'll find a detailed overview of each function within the `Tools` class, along with sample usage commands.
+## What's New?
 
-## Installation
+We've switched things up a bit by incorporating the amazing `MemoriesTable` class. Why? Well, we've discovered a fresh and efficient way to handle memories in Open WebUI, by a demo feature called MemoriesTable which is accessible in Settings/Personaliztion. This new implementation aligns perfectly with the modern-day needs of memory management, ensuring your tools remain top-notch and memories are safe!
 
-1st way. Go to [this](https://openwebui.com/t/mhio/gpt4_memory_mimic) link and install.
+1. **Improved Memory Handling**: The `MemoriesTable` class allows us to handle memory entries more effectively. It's designed to manage memory out of the box, providing functionalities for insertion, retrieval, and update with ease. 
+   
+2. **Consistent Updates**: The memory system now ensures your memories are always up to date and organized. No more worries about outdated information cluttering your memory vault!
 
-2nd way. Navigate into the tools directory in this project,download json file of the tool and import it in the tools section of your open WebUI.
+3. **Effortless Retrieval**: Need to take a trip down memory lane? We've got you covered. With the new system, recalling memories is straightforward and precise — everything presented just as you've stored it!
 
-## Usage of Tools Class Functions By the LLM
+## Why the Change?
 
-### handle_input
+Our previous approach was doing well (at least on the gpt-4o api tests; videos would be accessible soon), but we believe there’s always room for improvement. By embracing this new structure, we can achieve better performance, scalability, and make the experience of using Open WebUI even smoother.
 
-**Description**: Automatically summarize user input and enhance responses using memory data. 
+Plus, we wanted to thank our insightful contributor, [dnl13](https://github.com/dnl13), for the thoughtful recommendations that led to these improvements. Great ideas come from collaboration, and we're grateful to have such a supportive community!
 
-**Command**: *Handle input of "X" as a memory with the tag "Y" in the current memory file.*
+## How To Use
 
-```python
-await tools.handle_input(
-    input_text="X",
-    tag="Y",
-    user_wants_to_add=True,  # or False if not adding
-    llm_wants_to_add=False,  # or True if LLM adds
-    by="user"
-)
-```
+Using the tool is as simple as ever. Here’s a quick guide:
 
-### recall_memories
+- **Recalling Memories**: Retrieve all your stored memories quickly and easily with the `recall_memories` function; tell the LLM "what are our memories" or "who am I" to give you the answer based on the memories vault! Just like flipping through a photo album!
 
-**Description**: Retrieve all stored memories in the current file and provide them to the user.
+- **Adding Memories**: Add new memories anytime with the `add_memory` function.tell it to add one or its ownself will decide when to add one! It's like jotting down a thought in your digital diary — safe and secure.
+## Contribute
 
-**Command**: *Recall all memories stored in the current file.*
+We're always on the lookout for fresh ideas and improvements. If you have thoughts or features you'd like to see, feel free to fork this repository and share your advances!
 
-```python
-await tools.recall_memories()
-```
+## Acknowledgments
 
-### clear_memories
+A huge shoutout to everyone who’s been part of this journey. Special thanks to [dnl13](https://github.com/dnl13) for sparking the conversations that led to these enhancements. Together, we make Open WebUI a better place!
 
-**Description**: Clear all stored memories in the current file after user confirmation (requires confirmation twice).
+---
 
-**Command**: *Clear all memories in the current file after two confirmations.*
+**About the Author**
 
-```python
-await tools.clear_memories(user_confirmation=True)  # Call twice with True after initial confirmation.
-```
+Created by [mhioi](https://github.com/mhioi), this tool is a passion project aimed at pushing the boundaries of what is possible with Open WebUI. You're invited to explore, enjoy, and engage with all this tool has to offer!
 
-### refresh_memory
+---
 
-**Description**: Refresh and optimize memory data, including reindexing.
+**Maybe in the Future...**
 
-**Command**: *Refresh and optimize the memory data, including reindexing operations.*
+Somehow, like our friend [smcnaught1](https://github.com/smcnaught1) said, we may spread the gift of remembering to another branches like APIs ! who knows?!
 
-```python
-await tools.refresh_memory()
-```
+For more information, visit the [repository](https://github.com/mhioi/open-webui-stuff).
 
-### update_memory_entry
-
-**Description**: Update an existing memory entry based on its index.
-
-**Command**: *Update memory entry with index X to have tag "Y" and memo "Z" by user.*
-
-```python
-await tools.update_memory_entry(index=X, tag="Y", memo="Z", by="user")
-```
-
-### add_multiple_memories
-
-**Description**: Add multiple memory entries simultaneously.
-
-**Command**: *Add multiple memories with specified tags and memos in the current memory file.*
-
-```python
-await tools.add_multiple_memories(
-    memory_entries=[
-        {"tag": "personal", "memo": "First note", "by": "user"},
-        {"tag": "work", "memo": "Project update", "by": "LLM"}
-    ],
-    llm_wants_to_add=True
-)
-```
-
-### delete_memory_entry
-
-**Description**: Delete a specific memory entry based on its index after confirmation.
-
-**Command**: *Delete the memory entry at index X after confirming deletion.*
-
-```python
-await tools.delete_memory_entry(index=X, llm_wants_to_delete=True)
-```
-
-### delete_multiple_memories
-
-**Description**: Delete multiple memory entries in one go based on their indices.
-
-**Command**: *Delete multiple memory entries specified by their indices.*
-
-```python
-await tools.delete_multiple_memories(indices=[1, 3, 5], llm_wants_to_delete=True)
-```
-
-### create_or_switch_memory_file
-
-**Description**: Create a new memory file or switch to an existing one.
-
-**Command**: *Switch to a new or existing memory file named "file_name".*
-
-```python
-await tools.create_or_switch_memory_file("file_name")
-```
-
-### list_memory_files
-
-**Description**: List all available memory files in the designated directory.
-
-**Command**: *List all memory files available in the working directory.*
-
-```python
-await tools.list_memory_files()
-```
-
-### current_memory_file
-
-**Description**: Retrieve the name of the currently active memory file.
-
-**Command**: *Fetch the name of the currently active memory file.*
-
-```python
-await tools.current_memory_file()
-```
-
-### delete_memory_file
-
-**Description**: Delete a memory file with user confirmation and necessary file switching.
-
-**Command**: *Delete a memory file after confirming and managing active file switching.*
-
-```python
-await tools.delete_memory_file(
-    file_to_delete="file_name.json",
-    user_confirmation=True  # Call twice with True for confirmation.
-)
-```
-
-### execute_functions_sequentially
-
-**Description**: Execute a series of functions in sequence.
-
-**Command**: *Execute a sequence of functions as planned.*
-
-```python
-await tools.execute_functions_sequentially(
-    function_calls=[
-        {"name": "handle_input", "params": {"input_text": "Example", "tag": "work"}},
-        {"name": "recall_memories", "params": {}}
-    ]
-)
-```
-### Future updates:
-#### download_memory_file
-
-**Description**: Provide a download link for a memory file, or archive all memory files for download.
-
-**Command**: *Download the specified memory file or archive all as a tar for download.*
-
-```python
-await tools.download_memory_file(port=8080, file_name="memory.json")
-await tools.download_memory_file(port=8080, all_files=True)
-```
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit your pull requests.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
