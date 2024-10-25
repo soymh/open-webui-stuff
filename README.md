@@ -31,7 +31,7 @@ We're always on the lookout for fresh ideas and improvements. If you have though
 
 ## Acknowledgments
 
-A huge shoutout to everyone who’s been part of this journey. Special thanks to [dnl13](https://github.com/dnl13) for sparking the conversations that led to these enhancements. Together, we make Open WebUI a better place!
+A huge shoutout to everyone who’s been part of this journey. Special thanks to [dnl13](https://github.com/dnl13) for sparking the conversations that led to these enhancements. Together, we make Open WebUI a better place! ( for everyone, u know...)
 
 ---
 
