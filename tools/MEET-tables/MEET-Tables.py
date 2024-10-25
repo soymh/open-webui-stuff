@@ -1,7 +1,7 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
 author: https://github.com/mhioi
-version: 2.0.0
+version: 0.0.1
 license: MIT
 """
 
