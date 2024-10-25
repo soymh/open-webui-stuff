@@ -186,15 +186,3 @@ We’d love your help! If you’d like to contribute, please fork the repository
 
 This project proudly operates under the MIT License. For more details, check out the [LICENSE](LICENSE) file.
 
-Happy memory managing!
-```
-
-### Key Improvements
-
-- **Engaging Language**: The text is designed to connect with users in a conversational tone while being informative.
-  
-- **Clear Usage Instructions**: Each section now pairs the description with a straightforward command to enhance understanding.
-
-- **Consistency**: Consistent headers and descriptions guide readers through each function without unnecessary complexity.
-
-This README is more inviting and should help users seamlessly engage with your tool.
