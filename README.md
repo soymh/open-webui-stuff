@@ -1,4 +1,4 @@
-# Memory Enhancement Tool(in short : MEET) for Open WebUI
+# Memory Enhancement Tool(in short : MET) for Open WebUI
 
 Welcome to the Memory Enhancement Tool for Open WebUI! This tool is all about enhancing memory management capabilities within Open WebUI. If you're wondering why we decided to make some big changes in this branch, let me walk you through it.
 
