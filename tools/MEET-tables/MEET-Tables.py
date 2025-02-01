@@ -1,14 +1,14 @@
 """
 title: Memory Enhancement Tool for LLM Web UI
-author: https://github.com/mhioi
-version: 0.0.1
+author: https://github.com/soymh
+version: 0.0.2
 license: MIT
 """
 
 import json
 from typing import Callable, Any
 
-from open_webui.apps.webui.models.memories import Memories
+from open_webui.models.memories import Memories
 from pydantic import BaseModel, Field
 
 
@@ -83,14 +83,9 @@ class Tools:
             done=True,
         )
 
-        return f"Memories from the users memory vault: {content_list}"
+        return json.dumps({"memories": content_list}, ensure_ascii=False)
 
-    async def add_memory(
-        self,
-        input_text: str,
-        __user__: dict,
-        __event_emitter__: Callable[[dict], Any] = None,
-    ) -> str:
+    async def add_memory(self, input_text: str, __user__: dict, __event_emitter__: Callable[[dict], Any] = None) -> str:
         """
         Add a new entry to the user's memory vault. Always use the function to actually store the data; do not simulate or pretend to save data without using the function. After adding the entry, retrieve all stored memories from the user's memory vault and provide them accurately. Do not invent or omit any information; only return the data obtained from the function. Do not assume that any input text already exists in the user's memories unless the function explicitly confirms that a duplicate entry is being added. Simply acknowledge the new entry without referencing prior content unless it is confirmed by the memory function.
         - User's name: "xyz"
@@ -103,11 +98,11 @@ class Tools:
         """
         emitter = EventEmitter(__event_emitter__)
         user_id = __user__.get("id")
-
+        
         if not user_id:
             message = "User ID not provided."
             await emitter.emit(description=message, status="missing_user_id", done=True)
-            return json.dumps({"message": message}, ensure_ascii=False)
+            return json.dumps({"error": "User ID not provided"}, ensure_ascii=False)
 
         await emitter.emit(
             description="Adding entry to the memory vault.",
@@ -118,13 +113,11 @@ class Tools:
         new_memory = Memories.insert_new_memory(user_id, input_text)
 
         if not new_memory:
-            message = "Failed to add memory."
-            await emitter.emit(description=message, status="add_failed", done=True)
-            return json.dumps({"message": message}, ensure_ascii=False)
+            await emitter.emit(description="Failed to add memory.", status="add_failed", done=True)
+            return json.dumps({"error": "Failed to add memory"}, ensure_ascii=False)
 
         # Fetch updated memories after addition
         user_memories = Memories.get_memories_by_user_id(user_id)
-
         content_list = [
             f"{index}. {memory.content}"
             for index, memory in enumerate(
@@ -133,10 +126,9 @@ class Tools:
         ]
 
         await emitter.emit(
-            description=f"Added entry to the memory vault: {content_list}",
-            status="add_complete",
-            done=True,
+            description="Memory added successfully",
+            status="add_complete", 
+            done=True
         )
 
-        return f"Added to the users memory vault; new memories are: {content_list}"
-
+        return json.dumps({"content": content_list}, ensure_ascii=False, separators=(',', ':'))
