@@ -1,8 +1,7 @@
 """
 title: Discord Webhook
-author: open-webui
-author_url: https://github.com/open-webui
-funding_url: https://github.com/open-webui
+author: mhio
+author_url: https://github.com/soymh
 version: 0.1.0
 """
 
