@@ -26,7 +26,7 @@ Getting started with the Discord Webhook Tool is quick and easy. Here’s how to
 
 ### **How to Install**
 
-- Follow [this](https://openwebui.com/t/discord-webhook) link, and click the "Get" button.
+- Follow [this](https://openwebui.com/t/mhio/discord_webhook_proxy) link, and click the "Get" button.
 
 ### **Contribute**
 
