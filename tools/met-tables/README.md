@@ -26,6 +26,10 @@ Unlock the potential of your memories by integrating our user-friendly functions
 
 - **Adding Memories**: Safeguard your thoughts through our `add_memory` functionality. Add textual content or keep the process automated by letting it decide when to pick up new entries. Remembering is now made easier – akin to jotting your thoughts down in a digital diary!
 
+### **How to install**
+
+- follow [this](https://openwebui.com/t/mhio/met) link, and click "Get" button.
+
 ### **Contribute**
 
 Ready to contribute ideas or features? Dive in with passion, and share your enhancements with us. Our door is open for collaborations that push the boundaries of Open WebUI.

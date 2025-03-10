@@ -88,6 +88,12 @@ Seeking a seamless memory management experience for your local Large Language Mo
 
 ---
 
+### **How to install**
+
+- follow [this](https://openwebui.com/t/mhio/gpt4_memory_mimic) link, and click "Get" button.
+
+---
+
 ## Contribute
 
 Join our endeavor in making memory management more effective! If you're keen on contributing, consider forking the repository and forwarding your pull requests.
