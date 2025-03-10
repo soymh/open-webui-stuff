@@ -7,7 +7,7 @@ The Memory Enhancement Tools are designed to facilitate memory management for La
 ## Tools
 
 ### 1. GPT4 Memory Mimic Tool (Version 1.5.0)
-- **Author**: [mhioi](https://github.com/mhioi)
+- **Author**: [mhioi](https://github.com/soymh)
 - **License**: MIT
 
 #### Features
