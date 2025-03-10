@@ -2,7 +2,7 @@
 # Memory Enhancement Tools for Open WebUI
 
 ## Overview
-The Memory Enhancement Tools are designed to facilitate memory management for Large Language Models (LLMs) within a web UI. These tools allow users to store, update, retrieve, and manage their memories effectively, enhancing the interaction experience with LLMs.
+These Tools are designed to facilitate functionality and memory management for Large Language Models (LLMs) within Open webUI, enhancing the interaction experience with LLMs.
 
 ## Tools
 
