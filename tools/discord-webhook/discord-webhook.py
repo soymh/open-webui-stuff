@@ -2,7 +2,7 @@
 title: Discord Webhook
 author: mhio
 author_url: https://github.com/soymh
-version: 0.1.0
+version: 0.0.1
 """
 
 import asyncio
