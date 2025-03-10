@@ -1,4 +1,4 @@
-# Memory Enhancement Tool for Open WebUI - MEET
+# Memory Enhancement Tool for Open WebUI - MET
 
 ## **What's New?**
 

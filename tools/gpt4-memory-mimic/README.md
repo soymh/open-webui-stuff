@@ -1,5 +1,5 @@
 
-# Memory Enhancement Tool for Open WebUI
+# Memory Enhancement Tool for Open WebUI- GPT4-Memory-Mimic
 
 ## Overview
 
